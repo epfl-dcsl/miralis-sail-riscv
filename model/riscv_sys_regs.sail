@@ -394,7 +394,7 @@ function legalize_mie(o : Minterrupts, v : xlenbits) -> Minterrupts = {
 function legalize_mideleg(o : Minterrupts, v : xlenbits) -> Minterrupts = {
   /* M-mode interrupt delegation bits "should" be hardwired to 0. */
   /* FIXME: needs verification against eventual spec language. */
-  [Mk_Minterrupts(v) with MEI = 0b0, MTI = 0b0, MSI = 0b0]
+  [Mk_Minterrupts(v) with MEI = 0b0, MTI = 0b0, MSI = 0b0, SEI = 0b1, STI = 0b1, SSI = 0b1]
 }
 
 /* exception processing state */
