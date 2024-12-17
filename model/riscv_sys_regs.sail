@@ -349,6 +349,8 @@ function haveZdinx()   -> bool = sys_enable_zfinx() & sizeof(flen) >= 64
 /* interrupt processing state */
 
 bitfield Minterrupts : xlenbits = {
+  LCOFIE: 13, 
+  
   MEI : 11, /* external interrupts */
   SEI : 9,
   UEI : 8,
@@ -635,6 +637,8 @@ function legalize_sedeleg(s : Sedeleg, v : xlenbits) -> Sedeleg = {
 }
 
 bitfield Sinterrupts : xlenbits = {
+  LCOFIE : 13, 
+
   SEI : 9,  /* external interrupts */
   UEI : 8,
 
@@ -651,6 +655,7 @@ function lower_mip(m : Minterrupts, d : Minterrupts) -> Sinterrupts = {
   let s = [s with SEI = m[SEI] & d[SEI]];
   let s = [s with STI = m[STI] & d[STI]];
   let s = [s with SSI = m[SSI] & d[SSI]];
+  let s = [s with LCOFIE = m[LCOFIE] & d[LCOFIE]];
   s
 }
 
