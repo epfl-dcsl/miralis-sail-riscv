@@ -120,6 +120,40 @@ function loop () : unit -> unit = {
   }
 }
 
+/* returns whether to increment the step count in the trace */
+function step_interrupts_only(step_no : int) -> bool = {
+  /* for step extensions */
+  ext_pre_step_hook();
+
+  /*
+   * This records whether or not minstret should be incremented when
+   * the instruction is retired. Since retirement occurs before CSR
+   * writes we initialise it based on mcountinhibit here, before it is
+   * potentially changed. This is also set to false if minstret is
+   * written.  See the note near the minstret declaration for more
+   * information.
+   */
+  minstret_increment = mcountinhibit[IR] == 0b0;
+
+  let (retired, stepped) : (Retired, bool) =
+    match dispatchInterrupt(cur_privilege) {
+      Some(intr, priv) => {
+        if   get_config_print_instr()
+        then print_bits("Handling interrupt: ", interruptType_to_bits(intr));
+        handle_interrupt(intr, priv);
+        (RETIRE_FAIL, false)
+      },
+      None() => {
+        /* this part of the code was removed for the purpose of the formal verification */
+        (RETIRE_FAIL, false)
+      }
+    };
+
+  stepped
+}
+
+
+
 /* initialize model state */
 function init_model () -> unit = {
   init_platform (); /* devices */
