@@ -665,6 +665,7 @@ function lower_mie(m : Minterrupts, d : Minterrupts) -> Sinterrupts = {
   let s = [s with SEI = m[SEI] & d[SEI]];
   let s = [s with STI = m[STI] & d[STI]];
   let s = [s with SSI = m[SSI] & d[SSI]];
+  let s = [s with LCOFIE = m[LCOFIE] & d[LCOFIE]];
   s
 }
 
