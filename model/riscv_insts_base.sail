@@ -729,3 +729,18 @@ function clause execute SFENCE_VMA(rs1, rs2) = {
 
 mapping clause assembly = SFENCE_VMA(rs1, rs2)
   <-> "sfence.vma" ^ spc() ^ reg_name(rs1) ^ sep() ^ reg_name(rs2)
+
+
+// —————————————————————————————————— Hfence vvma —————————————————————————————————— //
+
+union clause ast = HFENCE_VVMA : (bits(5), bits(5))
+
+mapping clause encdec = HFENCE_VVMA(rs1, rs2)
+  <-> 0b0010001 @ rs2 @ rs1 @ 0b000 @ 0b00000 @ 0b1110011
+
+// —————————————————————————————————— Hfence gvma —————————————————————————————————— //
+
+union clause ast = HFENCE_GVMA : (bits(5), bits(5))
+
+mapping clause encdec = HFENCE_GVMA(rs1, rs2)
+  <-> 0b0010001 @ rs2 @ rs1 @ 0b000 @ 0b00000 @ 0b1110011
