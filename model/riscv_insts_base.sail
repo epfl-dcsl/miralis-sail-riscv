@@ -714,7 +714,8 @@ mapping clause encdec = SFENCE_VMA(rs1, rs2)
   <-> 0b0001001 @ rs2 @ rs1 @ 0b000 @ 0b00000 @ 0b1110011
 
 function clause execute SFENCE_VMA(rs1, rs2) = {
-  let addr : option(xlenbits) = if rs1 == 0b00000 then None() else Some(X(rs1));
+  // We remove the logic as we assume Miralis directly forwards it to the hardware (which is assumed to be correct in our scenario)
+  /*let addr : option(xlenbits) = if rs1 == 0b00000 then None() else Some(X(rs1));
   let asid : option(xlenbits) = if rs2 == 0b00000 then None() else Some(X(rs2));
   match cur_privilege {
     User       => { handle_illegal(); RETIRE_FAIL },
@@ -724,7 +725,8 @@ function clause execute SFENCE_VMA(rs1, rs2) = {
                     (_, _)           => internal_error(__FILE__, __LINE__, "unimplemented sfence architecture")
                   },
     Machine    => { flush_TLB(asid, addr); RETIRE_SUCCESS }
-  }
+  }*/
+  RETIRE_SUCCESS
 }
 
 mapping clause assembly = SFENCE_VMA(rs1, rs2)
@@ -738,9 +740,21 @@ union clause ast = HFENCE_VVMA : (bits(5), bits(5))
 mapping clause encdec = HFENCE_VVMA(rs1, rs2)
   <-> 0b0010001 @ rs2 @ rs1 @ 0b000 @ 0b00000 @ 0b1110011
 
+// Manually written
+function clause execute HFENCE_VVMA(rs1, rs2) = {
+  // We don't need to write the logic as Miralis simply executes the hardware function in that case
+  RETIRE_SUCCESS
+}
+
 // —————————————————————————————————— Hfence gvma —————————————————————————————————— //
 
 union clause ast = HFENCE_GVMA : (bits(5), bits(5))
 
 mapping clause encdec = HFENCE_GVMA(rs1, rs2)
   <-> 0b0010001 @ rs2 @ rs1 @ 0b000 @ 0b00000 @ 0b1110011
+
+// Manually written
+function clause execute HFENCE_GVMA(rs1, rs2) = {
+  // We don't need to write the logic as Miralis simply executes the hardware function in that case
+  RETIRE_SUCCESS
+}
