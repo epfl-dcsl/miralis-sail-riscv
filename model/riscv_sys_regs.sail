@@ -385,7 +385,8 @@ function legalize_mie(o : Minterrupts, v : xlenbits) -> Minterrupts = {
     MSI = v[MSI],
     SEI = v[SEI],
     STI = v[STI],
-    SSI = v[SSI]
+    SSI = v[SSI],
+    LCOFIE = v[LCOFIE]
   ];
   /* The U-mode bits will be modified if we have the 'N' extension. */
   if haveUsrMode() & haveNExt() then {

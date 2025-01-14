@@ -450,7 +450,7 @@ function platform_wfi() -> unit = {
    * since we currently don't have any other devices raising interrupts.
    */
   if mtime <_u mtimecmp then {
-    mtime  = mtimecmp;
-    mcycle = mtimecmp;
+    // mtime  = mtimecmp;
+    // mcycle = mtimecmp;
   }
 }
