@@ -691,6 +691,7 @@ function lift_sie(o : Minterrupts, d : Minterrupts, s : Sinterrupts) -> Minterru
   let m = if d[SEI] == 0b1 then [m with SEI = s[SEI]] else m;
   let m = if d[STI] == 0b1 then [m with STI = s[STI]] else m;
   let m = if d[SSI] == 0b1 then [m with SSI = s[SSI]] else m;
+  let m = if d[LCOFIE] == 0b1 then [m with LCOFIE = s[LCOFIE]] else m;
   if haveNExt() then {
     let m = if d[UEI] == 0b1 then [m with UEI = s[UEI]] else m;
     let m = if d[UTI] == 0b1 then [m with UTI = s[UTI]] else m;

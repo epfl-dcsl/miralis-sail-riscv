@@ -449,8 +449,4 @@ function platform_wfi() -> unit = {
   /* speed execution by getting the timer to fire at the next instruction,
    * since we currently don't have any other devices raising interrupts.
    */
-  if mtime <_u mtimecmp then {
-    // mtime  = mtimecmp;
-    // mcycle = mtimecmp;
-  }
 }
