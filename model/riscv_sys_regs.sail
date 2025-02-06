@@ -95,6 +95,10 @@ val sys_enable_next = {c: "sys_enable_next", ocaml: "Platform.enable_next", _: "
 /* Whether FIOM bit of menvcfg/senvcfg is enabled. It must be enabled if
    supervisor mode is implemented and non-bare addressing modes are supported. */
 val sys_enable_writable_fiom = {c: "sys_enable_writable_fiom", ocaml: "Platform.enable_writable_fiom", _: "sys_enable_writable_fiom"} : unit -> bool
+/* In the upstream Sail model the extension facility has been refactored, therefore we just add a manual quick fix here until we update to the latest version. */
+function sys_enable_sstc() -> bool = false
+function sys_has_zicbom() -> bool = false
+function sys_has_zicboz() -> bool = false
 
 /* How many PMP entries are implemented. This must be 0, 16 or 64 (this is checked at runtime). */
 val sys_pmp_count = {c: "sys_pmp_count", ocaml: "Platform.pmp_count", _: "sys_pmp_count"} : unit -> range(0, 64)
@@ -837,7 +841,13 @@ register senvcfg : SEnvcfg
 
 function legalize_menvcfg(o : MEnvcfg, v : bits(64)) -> MEnvcfg = {
   let v = Mk_MEnvcfg(v);
-  let o = [o with FIOM = if sys_enable_writable_fiom() then v[FIOM] else 0b0];
+  let o = [ o with
+    FIOM = if sys_enable_writable_fiom() then v[FIOM] else 0b0,
+    CBZE = if sys_has_zicboz() then v[CBZE] else 0b0,
+    CBCFE = if sys_has_zicbom() then v[CBCFE] else 0b0,
+    CBIE = if sys_has_zicbom() then (if v[CBIE] != 0b10 then v[CBIE] else 0b00) else 0b00,
+    STCE = if sys_enable_sstc() then v[STCE] else 0b0
+  ];
   // Other extensions are not implemented yet so all other fields are read only zero.
   o
 }
